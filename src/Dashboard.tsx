@@ -31,11 +31,13 @@ const Dashboard = () => {
 
   const itemsPerPage = 5
 
+  const getData = () => setTimeout(() => {
+    setTransactions(mockData)
+  },500)
+
   useEffect(() => {
     try {
-      setTimeout(() => {
-        setTransactions(mockData)
-      },500)
+      getData()
     } catch (error) {
       console.error(error)
       setError('Failed to fetch the transaction array')
@@ -43,11 +45,13 @@ const Dashboard = () => {
   },[])
 
   const filteredTransactions = useMemo(() => {
+
+    const from = startDate ? new Date(startDate).getTime() : -Infinity
+    const to = endDate ? new Date(endDate).getTime() : Infinity
+
     return transactions.filter((tx) => {
       const txDate = new Date(tx.date).getTime()
-      const from = startDate ? new Date(startDate).getTime() : -Infinity
-      const to = endDate ? new Date(endDate).getTime() : Infinity
-
+      
       return txDate >= from && txDate <= to
     })
   }, [transactions, startDate, endDate])
